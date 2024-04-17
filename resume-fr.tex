@@ -1,0 +1,596 @@
+
+\part*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé en français}
+\label{p:resume}
+
+
+
+% Since the term Cloud was coined in the 1990s [2, 3], the Cloud
+% Computing paradigm has become a pillar of computing mechanisms,
+% offering solutions for businesses, scientists, individuals. It is now
+% omnipresent, and a lot of companies (over 60% [4]) use Cloud
+% workspaces, whether it is private, public, or hybrid.
+
+% Traditionally, except for on premises (private) Cloud, huge data
+% centers (DCs) are built in key locations (e.g., in terms of energy
+% cost) to serve users requests from all over the world, or at least,
+% from large parts of the globe.
+
+
+
+Depuis l'utilisation du terme \emph{Cloud} (nuage) dans ce contexte
+dans les années 1990~\footnote{l'invention du Cloud en lui-même était
+  bien plus ancien, autour des années
+  1950s/1960s~\cite{history}.}~\cite{what-is-the-cloud,history-cloud},
+le paradigme de l'informatique en nuage, ou nuagique (Cloud Computing,
+ou en plus court, Cloud) est devenu un pilier des mécanismes
+informatiques, en offrant des solutions pour les entreprises, les
+scientifiques, les particuliers.
+%
+Il est désormais omniprésent, et beaucoup d'entreprises (plus de
+60\%~\cite{stats}) utilisent des espaces de travail dans le nuage,
+qu'ils soient privés ou publics.
+
+Traditionnellement, à l'exception du Cloud privé, d'énormes centres de
+données (datacenters, abbréviés DCs) sont construits dans des endroits
+stratégiques (par exemple, en terme de coût énergétique) pour répondre
+aux demandes des utilisateurs du monde entier, ou du moins de larges
+parties du globe.
+
+
+% However, there is a growing need for low latency applications to be
+% executed as close as possible to the clients. This is the new rising
+% paradigm, called Edge Computing [5].  The main goal is to have of
+% multiple micro and nano DCs at the edge of the network, closer to the
+% clients [6], whether they are direct users, or applications related to
+% Internet of things (IoT), smart cities, etc. For example,
+% Points-of-Presence (PoPs) at the edge of the network, could be
+% leveraged to get this geo-distributed (geographically distributed)
+% infrastructure, close to the users [7].
+
+Cependant, il existe un besoin important pour les applications
+sensibles à la latence (pour lesquelles la latence doit être faible)
+d'être exécutées au plus près des \emph{clients} (clients dans le sens
+de consommateurs de l'application, qui ne sont pas forcément des
+utilisateurs humains, mais qui peuvent être des applications liées à
+l'Internet des objets (IoT), aux villes intelligentes, etc.).
+%
+Ce besoin est rempli par le nouveau paradigme d'informatique en
+périphérique, ou périphérique (Edge Computing)~\cite{Sat17}.
+%
+Son principe central est d'avoir de multiples micro et nano DCs à la
+périphérie du réseau, plus proches des clients~\cite{SCZ+16}.
+%
+Par exemple, les points de présence (PoP) à la périphérie du réseau
+pourraient être exploités pour obtenir cette infrastructure
+géo-distribuée (géographiquement distribuée sur le globe entier), à
+proximité des clients~\cite{ELNC20}.
+
+
+% Initially, the activities I conducted on the topic focused on revising
+% a resource man- agement system such as OpenStack [8] to manage those
+% specific Edge infrastructures. To benefit from the geo-distribution of
+% these infrastructures, distributed systems at the Edge have to face
+% high latencies (between sites that are far apart) and frequent
+% disconnections inherent to wide-area networks (WAN) [5, 9].
+
+Initialement, les activités que j'ai menées sur le sujet se sont
+concentrées sur la révision d'un système de gestion des ressources tel
+qu'\os~\cite{os} pour gérer ces infrastructures spécifiques à l'Edge
+Computing (ou Edge).
+%
+Pour bénéficier de la géo-distribution de ces infrastructures, les
+systèmes distribués en périphérie doivent faire face à des des
+latences élevées (entre des sites très éloignés les uns des autres) et
+de fréquentes déconnexions inhérentes aux réseaux étendus
+(Wide Area Network, abbrévié WAN)~\cite{Sat17, MISC+08}.
+
+
+
+% In order to manage one application on such a widely geo-distributed
+% infrastructure, we also need to consider scalability, locality of the
+% resources, resiliency to disconnections and other site faults.
+
+
+% To deal with these challenges, one possible direction could be to
+% build applications specifically for the Edge, with the challenges in
+% mind [10, 11]. The Discovery Initiative [12] followed different
+% directions; when I began my work in the team, the main idea was to
+% manage Edge infrastructures by revising a Cloud computing platform,
+% (namely OpenStack), to make it run at the Edge.
+
+
+
+
+Afin de gérer une application sur une infrastructure aussi largement
+géo-distribuée, il convient également de tenir compte de son
+extensibilité, de la localisation des ressources et de sa résilience
+aux déconnexions ou autres défaillances des site.
+%
+
+Pour faire face à ces défis, une direction possible serait de
+construire des applications spécifiquement pour l'Edge, en gardant à
+l'esprit ces difficultés~\cite{DMVM18, CSFN19}.
+%
+L'initiative Discovery~\cite{discovery} a suivi différentes directions
+; lorsque j'ai commencé à travailler dans l'équipe, l'idée principale
+était de gérer les infrastructures en périphérie en révisant une
+plateforme de gestion d'infrastructure en nuage (à savoir OpenStack),
+pour la faire fonctionner à la périphérie.
+
+
+% The initial approach was about having the bulk of the application on
+% the Cloud, where non-critical operations requests are treated, and
+% handle the other requests on smaller, but more numerous and
+% heterogeneous nodes deployed at the Edge [13]. In other words,
+% instances of each critical service of an application must be deployed
+% on Edge sites to fulfill the Edge objectives. Such a deployment of
+% multiple instances is a problem because of the statefulness of
+% services [14, 15], especially because in most real-life scenarios,
+% services are stateful [16]. To clarify, splitting a stateless service
+% is straightforward, and you mostly need to split an application into
+% its different microservices and decide what can distributed and what
+% should stay centralized [15], but splitting stateful ones is a
+% conundrum, as it requires to deal with synchronisation issues in a
+% specific manner for each service of each application.
+
+
+L'approche initiale consistait à conserver la majeure partie de
+l'application sur le Cloud, où sont alors traitées les demandes
+d'opérations non critiques, et de traiter les autres requêtes
+(sensibles à la latence) sur des nœuds plus petits, mais plus nombreux
+et hétérogènes déployés à la périphérie~\cite{SCZLX16}.
+%
+En d'autres termes, des instances de chaque service critique d'une
+application doivent être déployées sur les sites de la périphérie pour
+atteindre les objectifs liés au paradigme (principalement de latence).
+%
+Ce déploiement d'instances multiples est un problème en raison de la
+conservation des états de certains services (stateful)~\cite{Sal78,
+  TBRT19}, notamment car dans la plupart des scénarios de la vie
+réelle, les services conservent l'état des ressources qu'ils
+gèrent~\cite{BKPP+09}.
+%
+Pour clarifier, diviser un service qui ne conserve pas d'état
+(stateless) est simple, et il convient principalement diviser une
+application en ses différents microservices et décider de ce qui peut
+être distribué et ce qui doit rester centralisé~\cite{TBRT19}.
+%
+Mais dans le cas de services à états, le problème est bien plus
+complexe, car il faut traiter les problèmes de synchronisation d'une
+manière spécifique pour chaque service de chaque application en ayant
+donc besoin de connaître le fonctionnement intégral de chaque service.
+
+
+% To help solving that puzzle, one of the research
+% directions we followed is to address the resource sharing between
+% sercices directly at the database level [17, 18, 19]. This solution
+% consists in using a globally distributed database as a shared memory
+% space for the services to use [20]. The assumption underneath is that
+% developers can then write an application on top of them without
+% thinking about distribution [21, 22]. This approach is nonetheless not
+% straightforward as it requires to study how to introduce the
+% geo-distribution into the application code to manage resources on such
+% a database. This seems contradictory to the assumption, and will be
+% explained in the subsection 3.3.1 of Part I. Here, we will just
+% mention that it is a matter of execution context that leads to
+% dedicated code.  We discovered that while using a distributed
+% database, namely CockroachDB [23], for OpenStack [24, 25]. OpenStack
+% is a huge system, with around 13M lines of code [26] and it is used
+% primarily for the Cloud. Therefore, changing the code to manage
+% resources in a geo-distributed database is not desired as some
+% Cloud-native applications can be huge.
+
+
+Pour aider à résoudre cette énigme, l'une des directions de recherche
+que nous avons suivie est de s'intéresser au partage des ressources
+entre les différents services directement au niveau de la base de
+données~\cite{LPSD17, VSK18, RLA19}.
+%
+Cette solution consiste à utiliser une base de données distribuée de
+façon globale, comme un espace mémoire partagé que les services
+peuvent utiliser~\cite{CDEF+12}.
+%
+L'hypothèse sous-jacente est que les développeurs peuvent alors écrire
+une application au-dessus de ces services sans se soucier de la
+distribution/localité~\cite{SBPB+18,SS19}.
+%
+Cette approche n'est cependant pas réellement simple car elle
+nécessite d'étudier la manière d'introduire la géo-distribution dans
+le code de l'application pour gérer les ressources sur une telle une
+telle base de données, ce qui semble contradictoire avec l'hypothèse
+de base.
+%
+Cette contradiction est plus largement expliquée dans la sous
+section~\ref{ssec:issue-db} de la partie~\ref{p:context}, mais
+globalement, c'est une question de contexte d'exécution qui conduit à
+un code dédié.
+%
+Nous avons découvert ceci en utilisant une base de données distribuée,
+à savoir CockroachDB~\cite{cockroachdb}, pour géo-distribuer
+\os~\cite{Che17,DCL18}.
+%
+OpenStack est un système énorme, comprenant environ 13 millions de
+lignes de code~\cite{openstackloc} et est utilisé principalement
+pour le Cloud.
+%
+Par conséquent, la modification du code pour pouvoir gérer la
+géo-distribution des ressources n'est pas souhaitée car certaines
+applications natives du Cloud peuvent être énormes et ce serait donc
+un travail titanesque.
+
+
+% Moreover, to manage the
+% geo-distribution, not only it requires tremendous efforts, but it also
+% requires to entangle the geo-distribution aspects (state sharing
+% between services across multiple locations) into the business code,
+% which goes against the principle of separation of concerns. This
+% principle widely adopted in the Cloud computing where a strict
+% separation between development and operational (abbreviated as DevOps)
+% teams exists [27, 28]: Programmers focus on the development and
+% support of the business logic of the application (i.e., the services),
+% whereas DevOps are in charge of the execution of the application on
+% the infrastructure (e.g., deployment, monitoring, scaling).
+
+% A principle which is enforced in the Cloud computing world by a
+% concept called service mesh. A service mesh relies on the fact that
+% application in the cloud computing are represented as a collection of
+% loosely coupled services [29] to mitigate the operational complexity
+% associated with modern applications [28] so that is decoupled from
+% application code [30]. Thus, service meshes is the solution I studied
+% to keep the geo-distribution concerns outside of the application code.
+
+
+De plus, gérer la localisation des ressources demande non seulement
+des efforts considérables, mais aussi mais aussi d'intégrer les
+aspects de la géo-distribution (partage de l'état entre les services
+sur plusieurs sites) dans le code métier, ce qui va à l'encontre du
+principe de séparation des préoccupations.
+%
+Ce principe de séparation des préoccupations est largement adopté dans
+l'informatique en nuage où il existe un cloisonnement strict entre les
+équipes de développement et d'exploitation (abrégé
+DevOps)~\cite{HKR13, LLGZG19}:
+%
+Les programmeurs se concentrent sur le développement et la logique
+métier de l'application (c'est-à-dire les services), tandis que les
+DevOps sont en charge de l'exécution de l'application sur
+l'infrastructure (par exemple, le déploiement, la surveillance, la
+mise à l'échelle).
+
+Un principe qui est mis en œuvre dans le monde du Cloud computing
+grâce à un concept appelé "\emph{service mesh}" (littéralement ``maillage de
+services'').
+%
+Un service mesh repose sur le fait qu'une application dans
+l'informatique en nuage est représentée comme un ensemble de services
+faiblement couplés~\cite{GZCS+19} pour atténuer la complexité
+opérationnelle associée aux applications modernes~\cite{LLGZG19}, ce
+qui permet de bien la séparer du code métier de
+l'application~\cite{SMmanifesto}.
+%
+Ainsi, les service meshs sont la solution que j'ai étudiée pour
+maintenir les préoccupations de géo-distribution en dehors du code de
+l'application.
+
+
+
+% These problems motivated the work I defend in this manuscript. I
+% propose a new approach that relies on the modularity of existing,
+% service-based applications of the Cloud to leverage the
+% geo-distributed infrastructures. This approach is generic to any of
+% the applications that corresponds to:
+
+% Service-based The application needs to be modular and follow the rules
+% of having different services managing different resources.
+
+% RESTful The services in the application must be REST compliant when
+% communicating with each other.
+
+
+Ces problèmes ont motivé le travail que je défends dans ce manuscrit.
+%
+Je propose une nouvelle approche qui s'appuie sur la modularité des
+applications du Cloud existantes, fonctionnant par services, pour
+exploiter les infrastructures géo-distribuées.
+%
+Cette approche est générique à toutes les applications qui
+correspondent à ces règles :
+\begin{description}
+\item[Basée sur les services] L'application doit être modulaire et
+  avoir différents services gérant différentes ressources.
+\item[RESTful] Les services de l'application doivent être conformes à
+  la logique REST lorsqu'ils communiquent entre eux.
+\end{description}
+
+% Research topics and questions
+
+% Following this scope, this thesis aims at finding a generic way to use
+% Cloud Applications at the Edge, with minimal to no impact on their
+% original code.
+
+% Concretely, the research questions we address are: Is
+% it possible to use applications developed for the Cloud on Edge
+% infrastructures without changing their code?  More specifically, can
+% such an approach be used to manage a geo-distributed, Edge infras-
+% tructure, with an application designed to manage Cloud
+% Infrastructures? And especially, since service meshes are designed to
+% manage the communications between services of an application outside
+% of its business code, can it be a solution to using Cloud applications
+% on Edge infrastructures without changing their code?
+
+
+\section*{Thèmes et questions de recherche}
+
+En suivant le raisonnement présenté, cette thèse vise à trouver une
+manière générique d'utiliser les applications du nuage en périphérie,
+avec un impact minimal, voire nul sur leur code code original.
+
+Concrètement, les questions de recherche que nous abordons sont les suivantes :
+\begin{itemize}
+\item \textbf{Est-il possible d'utiliser des applications
+    développées pour l'informatique en nuage sur des infrastructures
+    en périphérie sans modifier leur code ?}
+
+\item Plus spécifiquement, une telle une telle approche peut-elle être
+  utilisée pour gérer une infrastructure en périphérie,
+  géo-distribuée, avec une application conçue de gestion du nuage ?
+
+\item Et en particulier, puisque les service meshs sont conçus pour
+  gérer les communications entre les services d'une application en
+  dehors de son code métier, peuvent-ils être une solution pour
+  utiliser des applications du nuage sur des infrastructures en
+  périphérie sans changer leur code ?
+\end{itemize}
+
+
+% Contributions
+
+% My work in this thesis brought three distincts contributions:
+
+% - The first contribution is the theory of the approach, which was
+% presented in Euro- Par 2021 [31], and a more specific contribution on
+% the replication AMP workshop 2021 [32].
+
+% - The second contribution is the implementation of the approach, a
+% Proof of Concept (Proof of Concept), presented at the 2022 Open
+% Infrastructure Summit and as a short paper at ICSOC 2022.
+
+% - To validate this prototype, as well as preliminary studies, I also
+% contributed to the Enoslib proposal [33, 34], a library to help with
+% experimentations on different infrastructures, which we will not
+% discuss in this manuscript as it is out of scope.
+
+
+% To add more insight on my work during my thesis, while it has been
+% funded by Inria, I worked also with people from Orange Labs through
+% different projects in the Discovery initiative [12], such as [33, 25,
+% 35, 7], on which my thesis is based. I began working in the team on
+% OpenStack, and then the work was broaden to include Kubernetes [36],
+% with perspectives directed on more applications to ensure the
+% genericity of the solution.  Understand these huge applications to
+% know how to manipulate them was part of my work during this thesis.
+
+
+
+\section*{Contributions}
+
+Mon travail dans cette thèse a apporté trois contributions distinctes :
+\begin{itemize}
+\item La première contribution concerne la théorie de l'approche, qui
+  a été qui a été présentée à Euro-Par 2021~\cite{CDL21}, et une
+  contribution plus spécifique sur la réplication présentée à
+  l'atelier XP 2021 Workshops~\cite{DCL21}.
+
+\item La seconde contribution est la mise en œuvre de l'approche par
+  une preuve de concept (Proof of Concept) appelée Cheops, et
+  présentée à l'Open Infrastructure Summit~\cite{OIS-Berlin22,
+    OIS-Berlin22-video} et sous la forme d'un article court à l'ICSOC
+  2022~\cite{DAL22true}.
+
+\item Pour valider ce prototype, ainsi que les études préliminaires,
+  j'ai également contribué à la proposition Enoslib~\cite{CDVL+21,
+    enoslib}, une bibliothèque destinée à faciliter les
+  expérimentations sur différentes infrastructures, que nous
+  n'abordons pas dans ce manuscrit, car elle est hors sujet.
+\end{itemize}
+
+
+Pour donner un aperçu de mon travail pendant ma thèse, bien qu'elle
+ait été financée par Inria, j'ai également travaillé avec des
+personnes d'Orange Labs à travers différents projets de l'initiative
+Discovery~\cite{discovery}, tels que~\cite{CDVL+21, DCL18, juice,
+  ELNC20}, sur lesquels ma thèse est basée.
+
+J'ai commencé à travailler dans l'équipe sur \os, puis le
+travail a été élargi pour inclure Kubernetes~\cite{k8s}, avec des
+perspectives orientées pour tester plus d'applications afin d'assurer
+la généricité de la solution.
+%
+De plus, cette approche fonctionnant à la fois sur \os et Kubernetes
+permet de répondre en partie à la deuxième question de recherche,
+puisque ces deux systèmes permettent de gérer des applications sur les
+infrastructures nuagiques.
+%
+Comprendre ces énormes applications pour savoir comment les manipuler
+a fait donc également partie de mon travail au cours de cette thèse.
+
+
+% Manuscript organization
+
+
+% This thesis manuscript is composed of four parts.
+
+% The first part presents the context and background of this thesis, and
+% follows the Cloud (first chapter) to the Edge (second chapter)
+% logic. The third chapter explains in detail the possibilites to have a
+% Cloud application running on the Edge and paves the way to the
+% following parts of the thesis.
+
+% The second part presents the state-of-the-art approaches to tackle the
+% challenges at the Edge. It is divided in four chapters. First, I
+% explain how I compared the different solutions to our
+% requirements. Second, we see how applications can manage Edge
+% infrastructures, and in particular how Cloud management applications
+% can handle the shift to the Edge. This chapter has a section dedicated
+% to existing service meshes to see if they fit our requirements and
+% needs. Third, I give an overview of how it is possible to develop an
+% Edge-native application. Finally, I conclude on what points are
+% interesting to keep in mind for our solution and what is not
+% appropriate.
+
+% The third part presents the approach envisionned in my thesis. In the
+% first chapter, we discuss the overview of the approach in a
+% theoritical manner. In the second chapter, we dive into the
+% implementation of this approach.
+
+% The fourth part finally consists in three chapters, composed of a
+% critique of the approach, a sketch of what is coming in the future for
+% our approach, and the conclusion per say.
+
+\section*{Vue globale du manuscrit}
+
+Ce manuscrit a été construit comme ceci :
+\begin{description}
+\item [L'introduction] présente la problématique de ce manuscrit,
+  comme ce qui a été présenté précédemment.
+\item [\autoref{p:context}] explique le contexte du manuscrit plus en détail.
+  \begin{description}
+  \item [\autoref{chap:cloud}] décrit l'informatique en nuage de
+    manière générale pour donner un contexte au lecteur. Il donne un
+    aperçu du fonctionnement des applications fonctionnant dans le
+    nuage et de la gestion des infrastructures en nuage afin de donner
+    une base pour comprendre l'approche présentée dans cette thèse.
+  \item[\autoref{chap:edge}] présente l'informatique en périphérie et
+    ses défis pour expliquer sur quelles attentes nous avons
+    construire notre approche. Nous avons ensuite défini les principes
+    que nous pensons être nécessaires pour une application placée en
+    périphérie.
+  \item[\autoref{chap:cloud-app-to-edge}] décrit plus en détail
+    comment il est possible d'adapter une application Cloud pour
+    l'Edge et pourquoi les collaborations existantes, requises pour
+    cela impliquent des changements très intrusifs et/ou non
+    génériques.
+  \end{description}
+\item [\autoref{p:soa}] dépeint l'état de l'art concernant la gestion
+  des applications au niveau de la périphérie, qu'elles soient natives
+  ou qu'elles proviennent du nuage.
+  \begin{description}
+  \item[\autoref{chap:comparison} \textnormal{et}
+    \autoref{chap:soa-conclusion}] servent d'introduction et de
+    conclusion de l'état de l'art. Le premier présente la manière dont
+    nous avons évalué la littérature et le second présente la
+    comparaison globale.
+  \item[\autoref{chap:soa-edge-infra}] présente six approches pour
+    gérer l'infrastructure et, plus important encore, les applications
+    sur celle-ci. Il présente en particulier dans la section
+    \ref{chap:soa-SM} deux des service meshs les plus connus afin de
+    mieux comprendre leur fonctionnement et leur comportement par
+    rapport à nos exigences.
+  \item [\autoref{chap:soa-dev-edge-app}] montre deux approches
+    différentes pour développer une application Edge-native ou adapter
+    une application existante avec des changements intrusifs.
+  \end{description}
+\item [\autoref{part:cheops}] présente ma propre approche pour amener
+  les applications de au niveau de la périphérie en utilisant une
+  solution de type service mesh.
+  \begin{description}
+  \item[\autoref{chap:overview}] explique l'approche théorique pour
+    répondre aux attentes présentées dans la section \ref{sec:principles}.
+  \item[\autoref{chap:cheops}] présente plus en détail le PoC que nous
+    développons pour correspondre à l'approche sus-mentionnée, en
+    particulier la manière dont la réplication est implantée et
+    comment elle a été testée.
+\end{description}
+\item [Les chapitres de conclusion] présentent des discussions sur
+  notre approche, ses limites, ainsi que différentes perspectives pour
+  l'améliorer.
+\end{description}
+
+
+
+\section*{Résumé de l'approche}
+
+
+Pour faire face à la latence et aux déconnexions, il faut qu'une
+application utilisée soit déployée entièrement sur chaque site en
+périphérie, pour permettre l'approche ``local en priorité'', qui demande
+que l'application soit capable de fonctionner de manière autonome sur
+chaque site.
+%
+Ensuite, pour permettre un système cohérent, cher aux systèmes
+distribués pour la mobilité et l'utilisation de l'ensemble de
+l'infrastructure, il convient de donner à l'application la capacité
+d'être ``collaborative au besoin''.
+%
+Pour permettre la collaboration entre sites, nous devons être en
+mesure de manipuler le lieu d'exécution des requêtes.
+
+Comme les applications en nuage peuvent être énormes en terme de code,
+la solution doit être générique et non intrusive afin d'éviter de
+traiter les informations de localisation dans le code métier, en
+dehors de l'application.
+%
+Enfin, étant donné que l'infrastructure en périphérie est très
+dynamique (avec des déconnexions et des pannes), et pour permettre aux
+utilisateurs de décider de l'emplacement de l'exécution de la demande
+(pour des raisons de confidentialité par exemple), il est important de
+leur donner la possibilité de le choisir à la demande, de manière
+dynamique.
+
+
+L'étude de l'état de l'art a donné des indications sur la manière de
+satisfaire à toutes mes exigences dans un système P2P entièrement
+décentralisé, bien qu'elle n'ait pas fourni une solution complète pour
+chacune d'entre elles.
+
+Un service mesh dédié à la gestion de la géo-distribution et des
+collaborations entre applications était la solution qui répondait à
+toutes les exigences pour placer les applications du nuage existantes
+à la périphérie.
+%
+Pour permettre cette approche, \scl est le DSL qui prend en charge la
+description de requêtes définies par l'utilisateur, à la demande et à
+granularité fine.
+%
+
+La modularité des applications du nuage basées sur les services et la
+façon dont leurs services communiquent entre eux par le biais d'API
+REST sont les principaux éléments qui ont favorisé notre approche, en
+permettant la transmission de requêtes grâce auxquelles différentes
+collaborations sont possibles.
+
+
+La version actuelle permet trois types de collaborations :
+\emph{sharing} (le partage), qui utilise une ressource d'un autre
+site, \emph{replication} (la réplication), qui permet aux aux
+utilisateurs de placer des ressources identiques sur différents sites
+en garantissant qu'elles resteront identiques du point de vue de
+l'API. Enfin, \emph{cross} (le chevauchement) permet aux ressources de
+s'étendre sur différents sites.
+%
+Ces trois collaborations permettent d'utiliser les ressources
+localement en priorité, et entre les sites si nécessaire.
+%
+Elles contribuent à réduire la latence, permettent la redondance, la
+tolérance aux pannes et avec les requêtes définies par les
+utilisateurs, elles leur donnent la possibilité de choisir finement où
+leurs requêtes seront exécutées et les ressources à utiliser, ce qui
+garantit également le respect de leur vie privée, puisqu'ils peuvent
+sélectionner les sites auxquels ils font confiance.
+%
+En particulier, la réplication utilise des algorithmes et une logique
+bien connus pour assurer la cohérence et permet aux utilisateurs de
+manipuler la réplique la plus proche disponible.
+
+Comme perspectives d'amélioration de ce travail, je donne dans ce
+manuscrit des indications sur une éventuelle extension possible des
+collaborations grâce à la généricité de l'approche concernant les
+ressources.
+%
+Je présente également la classification des dépendances pour assurer
+la manipulation correcte des ressources dépendantes.
+%
+Enfin, pour le long terme, j'ai expliqué comment éviter les partages
+non valides par l'utilisation d'ownership types (types indiquant la
+propriété d'une ressource).

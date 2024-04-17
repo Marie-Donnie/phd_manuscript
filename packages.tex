@@ -1,0 +1,205 @@
+% Remplir les metadonnees du pdf
+% Fill the pdf metadata
+\hypersetup{
+    pdfauthor   = {Marie Delavergne},
+%    pdftitle    = {Th\`{e}se de doctorat de XYZ},
+%    pdfsubject  = {Th\`{e}se de doctorat de XYZ},
+%    pdfkeywords = {mots-cl\'{e}s},
+}
+
+\geometry{vmargin=4.0cm}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath,amssymb,amsfonts}
+
+
+\usepackage{algorithmic}
+
+
+\usepackage{graphicx}
+
+
+\usepackage{textcomp}
+
+
+\usepackage[dvipsnames]{xcolor}
+
+
+\usepackage{hyperref}
+%\renewcommand\UrlFont{\color{MidnightBlue}\rmfamily}
+\hypersetup{colorlinks=true, citecolor=RoyalPurple, filecolor=black, linkcolor=BlueViolet, urlcolor=MidnightBlue}
+
+\addto\extrasenglish{
+    \def\chapterautorefname{Chapter}
+}
+
+\addto\extrasenglish{
+    \def\sectionautorefname{Section}
+}
+
+\usepackage{xspace}
+
+%% Code highlight
+\usepackage{upquote}  % To set `upquote=true` in `lstset`
+
+\usepackage{listings}
+
+\usepackage{enumitem}
+
+\usepackage{verbatim}
+
+\usepackage{wrapfig}
+\usepackage{sidecap}
+\usepackage{subcaption}
+
+%\usepackage{caption}
+
+%% For background highlight in listing
+%% See https://tex.stackexchange.com/a/159602
+\newcommand{\hlight}[1]{%
+  \colorbox{cyan!10}{#1}%
+}
+
+% Listings preferences, with upquote => if we don't use upquote, no need for textcomp either
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  upquote=true,
+  morecomment=[l]{\#},
+  commentstyle=\ttfamily\itshape,
+  numbersep=3pt,numberstyle=\ttfamily\tiny,
+}
+
+
+
+%%   ___          ___
+%%  (o o)        (o o)
+%% (  V  ) TIKZ (  V  )
+%% --m-m----------m-m--
+
+\usepackage{tikz}
+\usetikzlibrary{
+  positioning, % syntax `below=<optional length> of ...`
+  backgrounds, % pgfonlayer{background}
+  arrows.meta, % for more arrows options
+  matrix,
+  fit,
+  calc,        % Math operations on coordinate `($s_i+(0,-1mm)$)`
+  shapes.geometric,
+  shapes.symbols,
+}
+\usepackage{etoolbox}  % For foreach in matrix
+
+%% Color blind accessible palette
+\definecolor{myyellow}{RGB}{255,194,10}
+\definecolor{myblue}{RGB}{12,123,220}
+
+%% Tikz Shapes
+\tikzset{every picture/.style={node distance=5mm}}
+\tikzstyle{app}=[rounded corners, thin, fill=black]
+\tikzstyle{labeled}=[minimum size=3mm, inner sep=0pt]
+\tikzstyle{endpoint}=[labeled, circle, draw, thin, labeled, minimum size=4mm]
+\tikzstyle{client}=[endpoint, fill=black, minimum size=2mm]
+\tikzstyle{service}=[matrix of math nodes, draw, row sep=2mm]
+\tikzstyle{db}=[cylinder, shape border rotate=90, draw]
+
+% Macro to draw a service with many endpoints and a specific id
+% `\service{id}{name}{endpoint_1,endpoint_2,ep_3}'
+\newcommand\idservice[4][]{
+  %% Build the matrix content outside
+  %% https://tex.stackexchange.com/a/22276
+  %% Use also \show\mymatrixcontent to see the expansion
+  \let\mymatrixcontent\empty
+  \expandafter\gappto\expandafter\mymatrixcontent\expandafter{|[draw=none, minimum size=0mm]| #3\\}%
+  \foreach \endpoint in {#4} {%
+    \expandafter\gappto\expandafter\mymatrixcontent\expandafter{|[endpoint]|}
+    \expandafter\gappto\expandafter\mymatrixcontent\expandafter{\endpoint\\}
+  }
+
+  \matrix (#2) [service,#1] {\mymatrixcontent};
+}
+
+% Service with same name and id,
+% `\service{name}{endpoint_1,endpoint_2,ep_3}'
+\newcommand\service[3][]{\idservice[#1]{#2}{#2}{#3}}
+% Service mesh with id, service mesh
+\newcommand\idmesh[4][]{\idservice[dashed,draw=none,#1]{#2}{#3}{#4}}
+\newcommand\mesh[3][]{\idmesh[#1]{#2}{#2}{#3}}
+
+%%   ___              ___
+%%  (o o)            (o o)
+%% (  V  ) END_TIKZ (  V  )
+%% --m-m--------------m-m--
+
+%% Hyphenation
+%% TeX won't hyphenate a word that's already been hyphenated. For
+%% example, "geo-distributed". Replace the hyphen in the
+%% "geo-distributed" with a \hyph command `geo\hyph{}distributed`.
+%% See https://www.texfaq.org/FAQ-nohyph
+\def\hyph{-\penalty0\hskip0pt\relax}
+\hyphenation{geo-dis-tri-bu-tion geo-dis-tri-bu-ted Dev-Ops}
+
+
+\usepackage[textwidth=17mm, colorinlistoftodos]{todonotes}
+
+
+\definecolor{CbBlue}{HTML}{332288}
+\definecolor{CbGreen}{HTML}{117733}
+\definecolor{CbTeal}{HTML}{44aa99}
+\definecolor{CbCyan}{HTML}{88ccee}
+\definecolor{CbOrange}{HTML}{ffab40}
+\definecolor{CbRose}{HTML}{cc6677}
+\definecolor{CbFuschia}{HTML}{aa4499}
+\definecolor{CbPlum}{HTML}{882255}
+
+\newcommand{\tododo}[1]{\todo[inline, shadow, color=CbTeal!80]{#1}}
+\newcommand{\todoref}[1]{\todo[inline, shadow, color=SeaGreen!80]{#1}}
+\newcommand{\todomore}[1]{\todo[inline, shadow, color=RoyalPurple!40]{#1}}
+\newcommand{\todocheck}[1]{\todo[inline, shadow, color=Yellow!40]{#1}}
+\newcommand{\todono}[1]{\todo[inline, shadow, color=OrangeRed!80]{#1}}
+\newcommand{\todofig}[1]{\missingfigure[figcolor=white]{#1}}
+
+
+% colored cite brackets
+\DeclareOuterCiteDelims{cite}{\textcolor{RoyalPurple}{\bibopenbracket}}{\textcolor{RoyalPurple}{\bibclosebracket}}
+
+
+\usepackage{epigraph}
+%\usepackage{epipart}
+
+%\usepackage[printonlyused,withpage]{acronym}
+
+\usepackage[acronym,toc]{glossaries}
+% https://tex.stackexchange.com/questions/198231/remove-page-break-before-glossary
+\renewcommand*{\glsclearpage}{}
+
+\newglossarystyle{better}{%
+  \glossarystyle{list}%
+  \renewcommand*{\glossaryentryfield}[5]{%
+    \item[\glsentryitem{##1}\glstarget{##1}{##2}] ##3%
+      }%
+  \renewcommand*{\glsgroupskip}{}%
+}
+
+\glossarystyle{better}
+
+
+\newcommand{\eg}{{e.g.,}\xspace}
+\newcommand{\ie}{{i.e.,}\xspace}
+\newcommand{\scl}{scope-lang\xspace}
+\newcommand{\os}{OpenStack\xspace}
+\newcommand{\ks}{Kubernetes\xspace}
+\newcommand{\sOne}{Site~1\xspace}
+\newcommand{\sTwo}{Site~2\xspace}
+\newcommand{\collab}{collaboration}
+\newcommand{\mscl}{\mathit{Scope}}
+\newcommand{\mscll}[1]{\mathit{Scope}=\mathit{#1}}
+\newcommand{\dc}{\gls{dc}\xspace}
+\newcommand{\dcs}{\glspl{dc}\xspace}
+\newcommand{\Dc}{Data center\xspace}
+\newcommand{\Dcs}{Data centers\xspace}
+
+
+\usepackage{multirow}
+
+\usepackage{tcolorbox}

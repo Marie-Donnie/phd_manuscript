@@ -1,0 +1,97 @@
+\markboth{}{}
+% Plus petite marge du bas pour la quatrième de couverture
+% Shorter bottom margin for the back cover
+\newgeometry{inner=30mm,outer=20mm,top=40mm,bottom=20mm}
+
+%insertion de l'image de fond du dos (resume)
+%background image for resume (back)
+\backcoverheader
+
+% Switch font style to back cover style
+\selectfontbackcover{ % Font style change is limited to this page using braces, just in case
+
+\titleFR{Cheops, une approche externe pour géo-distribuer en périphérie les applications à base de micro-services.}
+
+\keywordsFR{Informatique nuagique, Informatique périphérique, modularité, maillage de services}
+
+\abstractFR{Le passage de l'informatique en nuage à l'informatique en
+périphérie a modifié les exigences relatives aux applications qui y
+sont exécutées.
+%
+Si les applications actuelles de l'informatique en nuage sont
+extrêmement robustes dans ce contexte, elles n'ont pas été
+conçues pour faire face aux défis inhérents à l'informatique en
+périphérie, en particulier les déconnexions et les latences élevées
+que l'on peut observer entre des sites éloignés.
+%
+Puisque nous disposons déjà d'applications pour le nuage robustes et
+au code volumineux, la question qui se pose est la suivante
+: serait-il possible de les utiliser en périphérie en gérant
+l'échelle et la distribution géographique ?
+%
+Pour répondre à cette question, je présente d'abord différentes
+approches existantes pour faire des applications fonctionnant en
+périphérie et les lacunes de ces solutions, tout en
+conservant les réponses intéressantes à des problèmes spécifiques.
+%
+A partir de cette étude, je présente la solution construite pour
+amener les applications du nuage à la périphérie tout en donnant aux
+utilisateurices le choix du lieu d'exécution de leurs requêtes.
+%
+Cette solution s'appuie sur la modularité des applications existantes
+du nuage pour créer une approche ressemblant à un maillage de services
+qui intercepte les demandes entre les services et les redirige en
+fonction du langage spécifique à un domaine (DSL) que nous avons créé
+pour permettre aux utilisateurices de spécifier des collaborations
+entre plusieurs sites en périphérie.
+%
+% Elle cherche à répondre aux défis de l'informatique en périphérie,
+% notamment les les déconnexions, en exécutant les demandes localement
+% si les utilisateurs ne spécifient d'autre localisation via le DSL.
+}
+
+
+
+\titleEN{Cheops, a service mesh to geo-distribute micro-service applications at the Edge.}
+
+\keywordsEN{Cloud Computing, Edge Computing, modularity, service mesh}
+
+\abstractEN{The shift from Cloud Computing to Edge computing has
+changed the requirements for the applications running there.
+%
+While the current Cloud computing applications are extremely robust in
+the context of the Cloud, they were not made to face the challenges
+inherent to the Edge computing, especially disconnections and high
+latencies that can be observed between far sites.
+%
+Since we already have robust and huge Cloud applications, the question
+that remains is: could it be possible to use them at the Edge by
+managing the scale and the geo-distribution of the infrastructure
+outside of the business logic?
+%
+To answer this question, I study different existing approaches to
+bring applications to the Edge and identify what is missing in these
+solutions, as well as keeping track of the interesting answers to
+specific problems.
+%
+From this study, I present the solution built to bring Cloud
+applications at the Edge while giving users the choice of the location
+for their requests executions.
+%
+This solution relies on the modularity of these existing Cloud
+applications to create a service-mesh like approach that intercepts
+the requests between services and redirects them according to the
+domain-specific language (DSL) we created that allows users to specify
+collaborations between different Edge sites.
+%
+% It is aimed at coping with the Edge challenges, especially
+% disconnections, by executing requests locally as much as possible when
+% the users do not specify differently using the DSL.
+
+}
+
+}
+
+% Rétablit les marges d'origines
+% Restore original margin settings
+\restoregeometry

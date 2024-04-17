@@ -1,0 +1,333 @@
+
+
+\part*{Introduction}
+\addcontentsline{toc}{part}{Introduction}
+% \chaptermark{Introduction}
+
+
+
+\chapter*{Introduction}
+\chaptermark{Introduction}
+%
+\epigraph{A beginning is a very delicate time.}{\emph{Princess Irulan, Dune}}
+
+%
+Since the term \emph{Cloud} was coined in the 1990s~\footnote{the
+  invention of the Cloud itself was earlier, around the
+  1950s/1960s~\cite{history}.}~\cite{what-is-the-cloud,history-cloud},
+the Cloud Computing paradigm has become a pillar of computing
+mechanisms, offering solutions for businesses, scientists,
+individuals.
+%
+% It is so present that the reader might have used it one way or the
+% other to be able to read those very lines.
+%
+It is now omnipresent, and a lot of companies (over 60\%~\cite{stats})
+use Cloud workspaces, whether it is private, public, or hybrid.
+
+
+Traditionally, except for on premises (private) Cloud, huge data
+centers (\acrshort{DC}s) are built in key locations (\eg in terms of
+energy cost) to serve users requests from all over the world, or at
+least, from large parts of the globe.
+
+
+However, there is a growing need for low latency applications to be
+executed as close as possible to the \emph{clients} (clients as
+consummers of the application, that do not need to be direct human
+users, but can also be applications related to \gls{iot}
+(\acrshort{IoT}), smart cities, etc.).
+%
+This is the new rising paradigm, called Edge Computing~\cite{Sat17}.
+% Now, the Edge Computing is completing the need for low latency
+% applications to be executed as close as possible to the clients.
+%
+The main goal is to have of multiple micro and nano DCs at the edge of
+the network, closer to the clients~\cite{SCZ+16}.
+%
+For example, Points-of-Presence (\acrshort{PoP}s) at the edge of the
+network, could be leveraged to get this geo-distributed
+(geographically distributed on the entire globe) infrastructure, close
+to the clients~\cite{ELNC20}.
+
+
+
+Initially, the activities I conducted on the topic focused on revising
+a resource management system such as \os~\cite{os} to manage those
+specific Edge infrastructures.
+%
+To benefit from the geo-distribution of these infrastructures,
+distributed systems at the Edge have to face high latencies (between
+sites that are far apart) and frequent disconnections inherent to
+wide-area networks (WAN)~\cite{Sat17, MISC+08}.
+% %
+
+In order to manage one application on such a widely geo-distributed
+infrastructure, we also need to consider scalability, locality of the
+resources, resiliency to disconnections and other site faults.
+
+
+To deal with these challenges, one possible direction could be to
+build applications specifically for the Edge, with the challenges in
+mind~\cite{DMVM18, CSFN19}.
+%
+The Discovery Initiative~\cite{discovery} followed different
+directions; when I began my work in the team, the main idea was to
+manage Edge infrastructures by revising a Cloud computing management
+system, (namely \os), to allow it to run at the Edge.
+%
+
+The initial approach was about having the bulk of the application on
+the Cloud, where non-critical operations requests are treated, and
+handle the other requests (latency sensitive) on smaller, but more
+numerous and heterogeneous nodes deployed at the Edge~\cite{SCZLX16}.
+%
+In other words, instances of each critical service of an application
+must be deployed on Edge sites to fulfill the Edge objectives (mainly
+relative to the latency).
+%
+Such a deployment of multiple instances is a problem because of the
+statefulness of services~\cite{Sal78, TBRT19}, especially because in
+most real-life scenarios, services are stateful~\cite{BKPP+09}.
+%
+To clarify, splitting a stateless service is straightforward, and you
+mostly need to split an application into its different
+\glspl{microservice} and decide what can distributed and what should
+stay centralized~\cite{TBRT19}.
+%
+But splitting stateful services is a conundrum, as it requires to deal
+with synchronisation issues in a specific manner for each service of
+each application, with the necessity of knowing their inner
+functioning.
+%
+
+To help solving that puzzle, one of the research directions we
+followed is to address the resource sharing between sercices directly
+at the database level~\cite{LPSD17, VSK18, RLA19}.
+%
+This solution consists in using a globally distributed database as a
+shared memory space for the services to use~\cite{CDEF+12}.
+%
+The assumption underneath is that developers can then write an
+application on top of them without thinking about
+distribution~\cite{SBPB+18,SS19}.
+%
+% Nevertheless, this approach is still costly and non generic as it
+% requires to entangle the business code with the one related to the
+% states sharing between services across multiple locations.
+%Nevertheless, this approach is still costly:
+%
+% Managing these Edge infrastructures allows to deploy applications on
+% them, and thus run applications at the Edge.
+%
+%
+% Two directions were studied by the Discovery
+% Initiative~\cite{discovery} which I was part of to deploy applications
+% at the Edge:
+% \begin{itemize}
+% \item use distributed databases to geo-distribute the applications
+%   data~\cite{LPSD17}.
+%   %
+%   It is also a direction used in research outside
+%   of the team~\cite{RLA19, CDEF+12, SS19}.
+% \item split an application into its different microservices and decide
+%   what can distributed and what should stay centralized~\cite{TBRT19}.
+% \end{itemize}
+%
+This approach is nonetheless not straightforward as it requires to
+study how to introduce the geo-distribution into the application code
+to manage resources on such a database.
+%
+This seems contradictory to the assumption, and will be explained in
+the~\autoref{ssec:issue-db} of~\autoref{p:context}.
+%
+Here, we will just mention that it is a matter of execution context
+that leads to dedicated code.
+%
+%
+
+We discovered this contradiction while using a distributed database,
+namely CockroachDB~\cite{cockroachdb}, for \os~\cite{Che17,DCL18}.
+%
+\os is a huge system, with around 13M lines of
+code~\cite{openstackloc} and it is used primarily for the Cloud.
+%
+% Thus, it is not worthy to make the necessary changes to adapt it to
+% cope with the challenges of the Edge and maintain them.
+%
+Therefore, changing the code to manage resources in a geo-distributed
+database is not desired as some Cloud-native applications can be huge,
+and thus the necessary changes would be colossal.
+%
+
+Even worse, to manage the geo-distribution, not only it requires
+tremendous efforts, but it also requires to entangle the
+  geo-distribution aspects into the business code (\eg how to share
+states between \glspl{service} across multiple locations), which goes
+against the principle of separation of concerns.
+%
+This principle widely adopted in the Cloud computing where a strict
+separation between development and operational (abbreviated as
+\gls{DevOps}) teams exists~\cite{HKR13, LLGZG19}:
+%
+Programmers focus on the development and support of the business logic
+of the application (\ie the \glspl{service}), whereas \gls{DevOps} are in
+charge of the execution of the application on the infrastructure (\eg
+deployment, monitoring, scaling).
+%
+
+A principle which is enforced in the Cloud computing world by a
+concept called service mesh.
+%
+A service mesh relies on the fact that application in the cloud
+computing are represented as a collection of \gls{loosely coupled}
+\glspl{service}~\cite{GZCS+19} to mitigate the operational complexity
+associated with modern applications~\cite{LLGZG19} so that is
+decoupled from application code~\cite{SMmanifesto}.
+%
+Thus, service meshes is the solution I studied to keep
+the geo-distribution concerns outside of the application code.
+
+These problems motivated the work I defend in this manuscript.
+%
+I propose a new approach that relies on the modularity of
+existing, service-based applications of the Cloud to leverage the
+geo-distributed infrastructures.
+%
+This approach is generic to any of the applications that corresponds to:
+\begin{description}
+\item[Service-based] The application needs to be modular and follow
+  the rules of having different \glspl{service} managing different resources.
+\item[RESTful] The services in the application must be REST compliant
+  when communicating with each other.
+\end{description}
+
+%\todomore{don't know how to extend this part of the intro}
+
+% first on the existence of Points of Presence (PoPs) to interconnect
+% access networks
+
+
+\section*{Research topics and questions}
+
+Following this scope, this thesis aims at finding a generic way to use
+Cloud Applications at the Edge, with minimal to no impact on their
+original code.
+
+% his thesis focuses on pushing existing,
+% service-based Cloud applications to the Edge.
+%
+Concretely, the research questions we address are:
+\begin{itemize}
+\item[\cloud] \textbf{Is it possible to use applications developed for
+    the Cloud on Edge infrastructures without changing their code?}
+    %
+\item[\cloud] More specifically, can such an approach be used to
+  manage a geo-distributed, Edge infrastructure, with an application
+  designed to manage Cloud Infrastructures?
+%
+\item[\cloud] And especially, since service meshes are designed to
+  manage the communications between \glspl{service} of an application
+  outside of its business code, can it be a solution to using Cloud
+  applications on Edge infrastructures without changing their code?
+\end{itemize}
+
+
+
+  % This thesis aims at finding a generic way to use Cloud Applications
+  % at the Edge, with minimal to no impact on their original code.
+  %
+
+
+
+\section*{Contributions}
+
+My work in this thesis brought three distincts contributions:
+\begin{itemize}
+\item[\cloud] The first contribution is mainly the theory of the
+  approach, which was presented in Euro-Par 2021~\cite{CDL21}, and a
+  more specific contribution on the replication AMP workshop
+  2021~\cite{DCL21}.
+
+\item[\cloud] The second contribution is the implementation of the
+  approach, a Proof of Concept (\acrlong{PoC}) called Cheops,
+  presented at the Open Infrastructure Summit 2022~\cite{OIS-Berlin22,
+    OIS-Berlin22-video} and as a short paper at ICSOC
+  2022~\cite{DAL22true}.
+
+\item[\cloud] To validate this prototype, as well as preliminary
+  studies, I also contributed to the Enoslib proposal~\cite{CDVL+21,
+    enoslib}, a library to help with experimentations on different
+  infrastructures, which we will not discuss in this manuscript as it
+  is out of scope.
+\end{itemize}
+
+To add more insight on my work during my thesis, while it has been
+funded by Inria, I worked also with people from Orange Labs through
+different projects in the Discovery initiative~\cite{discovery}, such
+as~\cite{CDVL+21, DCL18, juice, ELNC20}, on which my thesis is based.
+%
+I began working in the team on \os, and then the work was broaden to
+include Kubernetes~\cite{k8s}, with perspectives directed on more
+applications to ensure the genericity of the solution.
+%
+The second goal of working with \os and Kubernetes was to try and
+answer the second research question, as those are two systems allowing
+to deploy applications on Cloud infrastructures.
+%
+Understand these huge applications to know how to manipulate them was
+part of my work during this thesis.
+
+
+
+\section*{Manuscript organization}
+
+This thesis manuscript is composed of four parts.
+%
+
+\begin{description}
+\item [The first part] presents the context and background of this
+  thesis, and follows the Cloud (first chapter) to the Edge (second
+  chapter) logic.
+%
+  The third chapter explains in detail the possibilites to have a
+  Cloud application running on the Edge and paves the way to the
+  following parts of the thesis.
+%
+\item [The second part] presents the state-of-the-art approaches to
+  tackle the challenges at the Edge.
+%
+  It is divided in four chapters.
+  %
+  \begin{itemize}
+  \item First, I explain how I compared the different solutions to our
+  requirements.
+  %
+  \item Second, we see how applications can manage Edge infrastructures, and
+  in particular how Cloud management applications can handle the shift
+  to the Edge. This chapter has a section dedicated to existing
+  service meshes to see if they fit our requirements and needs.
+%
+% Third, we paint a more precise landscape of how to use existing Cloud
+% applications at the Edge with techniques presented in the last chapter
+% of~\autoref{p:context}.
+  \item Third, I give an overview of how it is possible to develop an
+  Edge-native application.
+  %
+  \item Finally, I conclude on what points are interesting to keep in mind
+  for our solution and what is not appropriate.
+  \end{itemize}
+%
+
+\item [The third part] presents the approach envisionned in my thesis.
+%
+In the first chapter, we discuss the overview of the approach in a
+theoritical manner.
+%
+In the second chapter, we dive into the implementation of this
+approach.
+\item [The fourth part] finally consists in three
+  chapters, composed of a critique of the approach, a sketch of what
+  is coming in the future for our approach, and the conclusion per
+  say.
+\end{description}
