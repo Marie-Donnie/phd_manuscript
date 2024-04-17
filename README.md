@@ -1,5 +1,14 @@
 # phd_manuscript
+
 Just the sources for my manuscript, in case someone needs something
+
+
+
+Template and rest of the files comes from [ED Mathstic](https://gitlab.inria.fr/ed-mathstic/latex-template)
+
+This project has a License, but some of the PNGs were allowed specifically for this manuscript. Please contact the authors if you need to use them (the origin is written in the manuscript, where they are used).
+
+
 =======
 # ![(French flag)](https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/50px-Flag_of_France.svg.png) Modèle de thèse Doctorat Bretagne Loire
 
